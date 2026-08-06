@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Logs and generated reports
+*.log
+npm-debug.log*
+coverage/
+
+# Local-only test file
+/app.test.js
+
+# macOS metadata
+.DS_Store

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 POLICE API Documentation</title>
+  <style>
+    body {
+      max-width: 800px;
+      margin: 2rem auto;
+      font-family: monospace, monospace;
+      padding: 2rem 4rem;
+      line-height: 1.6;
+      color: #000;
+      text-align: left;
+      background-color: #fafafa;
+      border: 4px solid #000;
+    }
+    h1, h2, h3 {
+      color: #000;
+      border-bottom: 2px solid #000;
+      padding-bottom: 0.25rem;
+      margin-bottom: 1rem;
+    }
+    code {
+      font-family: monospace, monospace;
+    }
+    details {
+      border: 2px solid #000;
+      padding: 1rem;
+      margin-top: 1rem;
+      background-color: #fafafa;
+      font-family: monospace, monospace;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+      font-family: monospace, monospace;
+      font-size: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #000;
+    }
+    details pre {
+      margin-top: 1rem;
+      max-height: 300px;
+      overflow-x: auto;
+      background: #fff;
+      padding: 1rem;
+      border: 1px solid #000;
+      white-space: pre-wrap;
+    }
+    button {
+      margin-top: 1em;
+      background-color: #000;
+      color: #fafafa;
+      border: 2px solid #000;
+      padding: 0.5em 1em;
+      border-radius: 0;
+      cursor: pointer;
+      font-size: 1em;
+      font-family: monospace, monospace;
+      box-shadow: none;
+    }
+    button:focus {
+      outline: none;
+      box-shadow: none;
+    }
+    .service-card {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 0;
+      border: 2px solid #000;
+      margin-bottom: 1.5rem;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <div>
+  <h1>404 Police API</h1>
+  <h2>Documentation and Endpoints</h2>
+
+  <p>This documentation outlines the available API endpoints for the 404 Police service status dashboard. Each endpoint returns JSON data on the status of various services.</p>
+
+  <h2>Endpoints</h2>
+
+  <div class="service-card">
+    <h3>1. Get All Service Statuses</h3>
+    <p>This is the group endpoint that gathers and returns the current status for every tracked service in a single JSON response. It’s the primary API call for summarising all services at once on the main dashboard.</p>
+    <p><strong>Method:</strong> GET</p>
+    <p><strong>URL:</strong> <code>/api/status/all</code></p>
+    <p><strong>Returns:</strong> A combined JSON object aggregating the individual JSON responses from each service's summary endpoint.</p>
+    <p><strong>Status Code:</strong> 200 OK</p>
+  </div>
+
+  <div class="service-card">
+    <h3>2. Get Individual Service Status</h3>
+    <p>This endpoint targets a specific service and proxies its status page by fetching from that service’s own summary.json API — for example, OpenAI’s at https://status.openai.com/api/v2/summary.json or Reddit’s at https://www.redditstatus.com/api/v2/summary.json. The JSON structure typically includes a top-level status description, a list of components with their operational state, and recent incident history. Our implementation uses this structure directly to power individual service cards with detailed live data.</p>
+    <p><strong>Method:</strong> GET</p>
+    <p><strong>URL Format:</strong> <code>/api/&lt;serviceName&gt;</code></p>
+    <p><strong>Example:</strong> <code>/api/openai</code></p>
+    <p><strong>Returns:</strong> JSON object with the status of the specified service</p>
+    <p><strong>Example:</strong></p>
+    <details>
+      <summary>JSON Example</summary>
+      <pre><code>
+{"page":{"id":"01JMDK9XYNY6RXSED6SDWW50WY","name":"OpenAI","url":"https://status.openai.com/","updated_at":"2025-08-06T12:27:38Z"},"status":{"description":"Partial System Degradation","indicator":"minor"},"components":[{"id":"01JMXBNJXG1YMQPPCPCQX3MPA2","name":"File uploads","status":"degraded_performance","created_at":"2025-02-25T01:31:15Z","updated_at":"2025-06-26T16:49:33Z","position":0,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXBRMFEVZ7E0X9GD9FWR9WX","name":"Moderations","status":"operational","created_at":"2025-02-25T01:32:55Z","updated_at":"2025-06-26T16:49:33Z","position":1,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXBRMFE0V9J9X2HY3SKX399","name":"Completions (legacy)","status":"operational","created_at":"2025-02-25T01:32:55Z","updated_at":"2025-06-26T16:49:33Z","position":2,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXBRMFE4MAP2BHSJNZ787WX","name":"Images","status":"operational","created_at":"2025-02-25T01:32:55Z","updated_at":"2025-06-26T16:49:33Z","position":3,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXBRMFE796MJ8H81EGWA46P","name":"Uploads","status":"operational","created_at":"2025-02-25T01:32:55Z","updated_at":"2025-06-26T16:49:33Z","position":4,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXBRMFEMZK0HPK19RYET250","name":"Fine-tuning","status":"operational","created_at":"2025-02-25T01:32:55Z","updated_at":"2025-06-26T16:49:33Z","position":5,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXBRMFEPDPH0F2A94WGEZP4","name":"Assistants","status":"operational","created_at":"2025-02-25T01:32:55Z","updated_at":"2025-06-26T16:49:33Z","position":6,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXBRMFEQW613TFE89F45035","name":"Realtime","status":"operational","created_at":"2025-02-25T01:32:55Z","updated_at":"2025-06-26T16:49:33Z","position":7,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JP8CD9JR3HR6Y7G4Q75N4DVW","name":"Responses","status":"operational","created_at":"2025-03-13T18:31:32Z","updated_at":"2025-06-26T16:49:33Z","position":8,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXCAX0Q10KMN6TADJHQNBSJ","name":"Login","status":"operational","created_at":"2025-02-25T01:42:53Z","updated_at":"2025-06-26T16:49:33Z","position":9,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXBNJXGQ9MXPY3VGHKFDRJ6","name":"Context connectors","status":"degraded_performance","created_at":"2025-02-25T01:31:15Z","updated_at":"2025-06-26T16:49:33Z","position":10,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JVCV8YSWZFRSM1G5CVP253SK","name":"Codex","status":"degraded_performance","created_at":"2025-05-16T15:26:46Z","updated_at":"2025-06-26T16:49:33Z","position":11,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXBNJXG1S2D9V65P1ZZTD94","name":"Login","status":"degraded_performance","created_at":"2025-02-25T01:31:15Z","updated_at":"2025-06-26T16:49:33Z","position":12,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXBNJXG5HHAKA2FAFS7BXSM","name":"1-800-CHAT-GPT","status":"degraded_performance","created_at":"2025-02-25T01:31:15Z","updated_at":"2025-06-26T16:49:33Z","position":13,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXBNJXGJ6C964H647A5DMX0","name":"GPT vision","status":"degraded_performance","created_at":"2025-02-25T01:31:15Z","updated_at":"2025-06-26T16:49:33Z","position":14,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXBNJXGGT5SR5DB9J7GYY48","name":"Voice mode","status":"degraded_performance","created_at":"2025-02-25T01:31:15Z","updated_at":"2025-06-26T16:49:33Z","position":15,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXCAX0QM438N5CDG2RMJ07X","name":"Video viewing","status":"operational","created_at":"2025-02-25T01:42:54Z","updated_at":"2025-06-26T16:49:33Z","position":16,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JNKS9D9S72PMP1938PVFFQN4","name":"Compliance","status":"operational","created_at":"2025-03-05T18:32:33Z","updated_at":"2025-06-26T16:49:33Z","position":17,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXBNJXG5VWB72T922RQE6NR","name":"Memory","status":"degraded_performance","created_at":"2025-02-25T01:31:15Z","updated_at":"2025-06-26T16:49:33Z","position":18,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXBNJXG0SGB04EF3FT2KMAC","name":"Single Sign-On","status":"degraded_performance","created_at":"2025-02-25T01:31:15Z","updated_at":"2025-06-26T16:49:33Z","position":19,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXCAX0Q6C4KFTHY65EP0ZB2","name":"Feed","status":"operational","created_at":"2025-02-25T01:42:54Z","updated_at":"2025-06-26T16:49:33Z","position":20,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JQ7EJWA29C5X2B3QW8P9BEFF","name":"Image Generation","status":"operational","created_at":"2025-03-25T20:06:00Z","updated_at":"2025-06-26T16:49:33Z","position":21,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXCAX0QN2ZHVMS54EEN1HXB","name":"Video generation","status":"operational","created_at":"2025-02-25T01:42:53Z","updated_at":"2025-06-26T16:49:33Z","position":22,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JSG1XMJ9RVJJQ0E85NVSJ2AZ","name":"Operator","status":"degraded_performance","created_at":"2025-04-23T00:49:15Z","updated_at":"2025-06-26T16:49:33Z","position":23,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"},{"id":"01JMXBRMFE6N2NNT7DG6XZQ6PW","name":"Chat","status":"operational","created_at":"2025-02-25T01:32:55Z","updated_at":"2025-06-26T16:49:33Z","position":24,"page_id":"01JMDK9XYNY6RXSED6SDWW50WY"}],"incidents":[{"id":"01K1ZF6W0MH8KNBGFQZ8ZDV3P1","name":"502 Gateway Errors","status":"identified","created_at":"2025-08-06T10:35:39Z","updated_at":"2025-08-06T12:27:38Z","impact":"major","page_id":"01JMDK9XYNY6RXSED6SDWW50WY","incident_updates":[{"id":"01K1ZNKWNA1B9CYZBSVSD6H3AZ","body":"","created_at":"2025-08-06T12:27:38Z","display_at":"2025-08-06T12:27:38Z","incident_id":"01K1ZF6W0MH8KNBGFQZ8ZDV3P1","status":"identified","updated_at":"2025-08-06T12:27:38Z"},{"id":"01K1ZKR463AYSD4W377ZRYZG0Y","body":"","created_at":"2025-08-06T11:54:59Z","display_at":"2025-08-06T11:54:59Z","incident_id":"01K1ZF6W0MH8KNBGFQZ8ZDV3P1","status":"identified","updated_at":"2025-08-06T11:54:59Z"},{"id":"01K1ZF6W0M3XQ01W3G68G3JAEF","body":"","created_at":"2025-08-06T10:35:39Z","display_at":"2025-08-06T10:35:39Z","incident_id":"01K1ZF6W0MH8KNBGFQZ8ZDV3P1","status":"identified","updated_at":"2025-08-06T10:35:39Z"}]}]}
+</code></pre>
+    </details>
+    <p><strong>Status Code:</strong> 200 OK or 404 Not Found if invalid service</p>
+  </div>
+
+  </div>
+</body>
+</html>
