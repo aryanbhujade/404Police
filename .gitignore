@@ -1,18 +1,15 @@
-# Dependencies
+# Catalog health-check output. Generated locally and in CI, never committed:
+# it is a point-in-time snapshot of third-party uptime, not source.
+reports/
+
+# Editor / OS noise
+.DS_Store
+.idea/
+.vscode/
+
+# There are no runtime dependencies; if one ever appears, it stays out of the
+# deployed root — GitHub Pages publishes this tree verbatim.
 node_modules/
 
-# Local environment files
-.env
-.env.*
-!.env.example
-
-# Logs and generated reports
-*.log
-npm-debug.log*
-coverage/
-
-# Local-only test file
+# Original server-side test kept locally while this branch serves the static build.
 /app.test.js
-
-# macOS metadata
-.DS_Store

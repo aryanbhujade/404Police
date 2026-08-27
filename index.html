@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--
+      GitHub Pages serves static files only and cannot set response headers, so the
+      policy has to travel in the document. A meta CSP silently ignores
+      frame-ancestors, report-uri, and sandbox — those need a real header and are
+      therefore not attempted here. See README "Content Security Policy".
+
+      connect-src is https: rather than an allow-list because the board is
+      user-extensible: any of the 124 supported catalog hosts may be fetched, and
+      more can be added without editing this file. It still blocks cleartext http:.
+      style-src needs 'unsafe-inline' for the style="display:none" attributes below
+      and the Google Fonts stylesheet; script-src does not, and stays locked to 'self'.
+    -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'none';
+        script-src 'self';
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data:;
+        connect-src 'self' https:;
+        base-uri 'self';
+        form-action 'none';
+        object-src 'none'">
+    <title>404 Police</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="add-service.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="header-title">
+                    <span class="status-indicator police" ></span>
+                    404 Police
+                </h1>
+                <div class="header-controls">
+                    <button id="addServiceBtn" class="add-service-btn" title="Add a service">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                    </button>
+                    <button id="refreshBtn" class="refresh-btn" title="Refresh All Services">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <polyline points="1 20 1 14 7 14"></polyline>
+                            <path d="m3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                    </button>
+                    <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle Dark Mode">
+                        <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="status-summary" id="statusSummary">
+                <div class="summary-item">
+                    <span class="summary-count" id="operationalCount">0</span>
+                    <span class="summary-label">Operational</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-count" id="degradedCount">0</span>
+                    <span class="summary-label">Degraded</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-count" id="outageCount">0</span>
+                    <span class="summary-label">Outages</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <div id="loadingMessage" class="loading-message">
+                <div class="loading-spinner"></div>
+                <p>Loading service status data...</p>
+            </div>
+
+            <div id="errorMessage" class="error-message" style="display: none;">
+                <div class="error-icon">⚠️</div>
+                <p>Unable to load some services. Please try again later.</p>
+            </div>
+
+            <section class="service-category" id="aiServices" style="display: none;">
+                <h2 class="category-title">AI Services</h2>
+                <div class="service-grid" id="aiGrid"></div>
+            </section>
+
+            <section class="service-category" id="messagingServices" style="display: none;">
+                <h2 class="category-title">Messaging &amp; Collaboration</h2>
+                <div class="service-grid" id="messagingGrid"></div>
+            </section>
+
+            <section class="service-category" id="streamingServices" style="display: none;">
+                <h2 class="category-title">Streaming &amp; Media</h2>
+                <div class="service-grid" id="streamingGrid"></div>
+            </section>
+
+            <section class="service-category" id="developerServices" style="display: none;">
+                <h2 class="category-title">Developer Tools</h2>
+                <div class="service-grid" id="developerGrid"></div>
+            </section>
+
+            <section class="service-category" id="cloudServices" style="display: none;">
+                <h2 class="category-title">Cloud Infrastructure</h2>
+                <div class="service-grid" id="cloudGrid"></div>
+            </section>
+
+            <section class="service-category" id="otherServices" style="display: none;">
+                <h2 class="category-title">Other Services</h2>
+                <div class="service-grid" id="otherGrid"></div>
+            </section>
+        </div>
+    </main>
+
+    <div id="incidentDetail" class="detail">
+        <div class="detail-content">
+            <div class="detail-header">
+                <h3 id="detailTitle">Service Details</h3>
+                <button class="detail-close" id="detailClose">&times;</button>
+            </div>
+            <div class="detail-body" id="detailBody">
+
+
+            </div>
+        </div>
+    </div>
+
+    <div id="addServiceModal" class="detail">
+        <div class="detail-content">
+            <div class="detail-header">
+                <h3>Add a service</h3>
+                <button class="detail-close" id="addServiceClose">&times;</button>
+            </div>
+            <div class="detail-body">
+                <input
+                    type="search"
+                    id="addServiceSearch"
+                    class="add-search"
+                    placeholder="Search services…"
+                    autocomplete="off"
+                    spellcheck="false">
+                <div id="addServiceResults" class="add-results"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 404 Police. Created by Aryan Bhujade. Last updated: <span id="lastUpdated">--</span></p>
+        </div>
+    </footer>
+
+    <script src="waves.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

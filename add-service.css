@@ -1,0 +1,224 @@
+/* 404 Police — add-service flow and the 'unknown' status state.
+ *
+ * Uses the variables and the brutalist language already established in
+ * style.css: square corners, hard offset shadows, uppercase labels. Kept in a
+ * separate file so style.css stays byte-identical to the original. */
+
+/* --- PLUS button ------------------------------------------------------- */
+/* Sits beside refresh and dark-mode, so it copies their treatment exactly
+   rather than introducing a third button style in the same row. */
+.add-service-btn {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+}
+
+.add-service-btn:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--border-hover);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+
+/* --- search field ------------------------------------------------------ */
+/* .detail-body is already the scroll container (max-height: 60vh), so the
+   input sticks to its top instead of scrolling away with the results. */
+.add-search {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-md);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    border: 3px solid var(--text-primary);
+    border-radius: 0;
+    box-shadow: 5px 5px 0 #000;
+}
+
+[data-theme="dark"] .add-search {
+    background: var(--bg-tertiary);
+    border-color: #000;
+}
+
+.add-search:focus {
+    outline: none;
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 #000;
+}
+
+.add-search::placeholder {
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- results list ------------------------------------------------------ */
+.add-results {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-sm) 0;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.add-row:last-child {
+    border-bottom: none;
+}
+
+.add-row-label {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    min-width: 0;
+}
+
+.add-row-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.add-row-category {
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.add-row-btn {
+    flex-shrink: 0;
+    min-width: 84px;
+    padding: 5px var(--space-md);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    border: 1.5px solid #000;
+    border-radius: 0;
+    box-shadow: 4px 4px 0 #000;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+[data-theme="dark"] .add-row-btn {
+    background: var(--border-color);
+}
+
+.add-row-btn:hover {
+    background: #2563eb;
+    border-color: #1d4ed8;
+    color: #ffffff;
+    box-shadow: 6px 6px 0 #1e3a8a;
+    transform: translate(-2px, -2px);
+}
+
+/* Already on the board, so the action is Remove: red only on hover, to avoid a
+   wall of red when most results are already added. */
+.add-row-btn.added:hover {
+    background: var(--status-major);
+    border-color: var(--status-major);
+    color: #ffffff;
+    box-shadow: 6px 6px 0 #7f1d1d;
+}
+
+.add-empty {
+    padding: var(--space-xl) 0;
+    text-align: center;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.85rem;
+}
+
+/* --- per-card remove control ------------------------------------------- */
+/* .service-card is already position: relative with overflow: hidden. */
+.service-remove {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    line-height: 1;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    border: none;
+    border-left: 3px solid var(--text-primary);
+    border-bottom: 3px solid var(--text-primary);
+    border-radius: 0;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast);
+}
+
+[data-theme="dark"] .service-remove {
+    border-color: #000;
+    background: var(--bg-tertiary);
+}
+
+.service-card:hover .service-remove,
+.service-remove:focus-visible {
+    opacity: 1;
+}
+
+.service-remove:hover {
+    color: #ffffff;
+    background: var(--status-major);
+}
+
+/* Hover does not exist on touch, so the control stays visible there. */
+@media (hover: none) {
+    .service-remove { opacity: 1; }
+}
+
+/* --- unknown status ----------------------------------------------------- */
+/* getStatusClass() returns 'unknown' for unrecognised payloads and failed
+   fetches, where the original returned 'operational'. Without this rule the
+   badge would inherit .service-status with no colour — and a status dashboard
+   silently rendering an unreachable service as healthy is the one outcome it
+   must never produce. Deliberately neutral grey: unknown is not a health
+   reading, so it should not borrow the green/amber/red vocabulary. */
+.service-status.unknown {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
+.incident-status.unknown,
+.component-status.unknown {
+    font-weight: 600;
+    color: var(--text-muted);
+}
