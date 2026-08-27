@@ -4,6 +4,8 @@ A status dashboard for AI, messaging, streaming, developer, cloud, and consumer
 services. Pick the services you care about, see whether they are up, read the
 active incidents.
 
+**Live dashboard:** [aryanbhujade.github.io/404Police](https://aryanbhujade.github.io/404Police/)
+
 This branch is the **static rewrite**: no server, no build step, no dependencies.
 The repository root is the deployed site.
 
