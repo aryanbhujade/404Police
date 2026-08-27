@@ -2,6 +2,8 @@
 
 A Node.js status dashboard that collects public status-page data for popular AI, messaging, streaming, developer, cloud, and online services.
 
+**Live dashboard:** [aryanbhujade.github.io/404Police](https://aryanbhujade.github.io/404Police/)
+
 ## Requirements
 
 - Node.js 18 or newer
