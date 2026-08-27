@@ -31,6 +31,21 @@ test('every service has the fields app.js reads', () => {
     }
 });
 
+test('declared service icons are local SVG assets that exist', () => {
+    for (const service of catalog.services.filter(service => service.icon)) {
+        assert.match(service.icon, /^assets\/logos\/[a-z0-9-]+\.svg$/, `${service.key}: unsafe icon path`);
+        const iconPath = path.join(ROOT, service.icon);
+        const icon = readFileSync(iconPath, 'utf8');
+        assert.match(icon, /<svg\b/, `${service.key}: icon is not SVG markup`);
+    }
+});
+
+test('every default service has an icon', () => {
+    const byKey = new Map(catalog.services.map(service => [service.key, service]));
+    const missing = catalog.defaults.filter(key => !byKey.get(key)?.icon);
+    assert.deepEqual(missing, []);
+});
+
 test('service keys are unique', () => {
     const seen = new Set();
     const duplicates = [];

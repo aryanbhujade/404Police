@@ -198,6 +198,7 @@ class ServiceStatusDashboard {
                 key: entry.key,
                 service: entry.name,
                 category: entry.category,
+                icon: entry.icon || null,
                 status: { description: 'Unable to fetch status', indicator: 'unknown' },
                 last_updated: new Date().toISOString(),
                 error: true
@@ -222,6 +223,7 @@ class ServiceStatusDashboard {
             key: entry.key,
             service: entry.name,
             category: entry.category,
+            icon: entry.icon || null,
             status,
             last_updated: new Date().toISOString(),
             incidents: data.incidents || [],
@@ -314,6 +316,18 @@ class ServiceStatusDashboard {
 
             const label = document.createElement('div');
             label.className = 'add-row-label';
+            if (svc.icon) {
+                const logoFrame = document.createElement('span');
+                logoFrame.className = 'add-row-logo-frame';
+                logoFrame.title = svc.name;
+                const logo = document.createElement('img');
+                logo.className = 'add-row-logo';
+                logo.src = svc.icon;
+                logo.alt = '';
+                logo.setAttribute('aria-hidden', 'true');
+                logoFrame.appendChild(logo);
+                label.appendChild(logoFrame);
+            }
             const name = document.createElement('span');
             name.className = 'add-row-name';
             name.textContent = svc.name;
@@ -401,11 +415,12 @@ class ServiceStatusDashboard {
 
     createServiceCard(service) {
         const card = document.createElement('div');
-        card.className = 'service-card';
+        card.className = service.icon ? 'service-card has-service-logo' : 'service-card';
 
         const statusClass = this.getStatusClass(service.status.indicator);
         const statusDescription = service.status.description || 'Unknown';
         const safeServiceName = this.escapeHtml(service.service || 'Unknown Service');
+        const safeIcon = service.icon ? this.escapeHtml(service.icon) : '';
         const safeStatusDescription = this.escapeHtml(statusDescription);
         const safeFormattedStatus = this.escapeHtml(this.formatStatusText(statusDescription));
         const incidentCount = service.incidents ? service.incidents.length : 0;
@@ -413,7 +428,14 @@ class ServiceStatusDashboard {
 
         card.innerHTML = `
             <div class="service-header">
-                <h3 class="service-name">${safeServiceName}</h3>
+                <h3 class="service-name" title="${safeServiceName}">
+                    ${safeIcon ? `
+                        <span class="service-logo-frame" aria-hidden="true">
+                            <img class="service-logo" src="${safeIcon}" alt="">
+                        </span>
+                    ` : ''}
+                    <span class="service-name-text">${safeServiceName}</span>
+                </h3>
                 <span class="service-status ${statusClass}">
                     ${safeFormattedStatus}
                 </span>

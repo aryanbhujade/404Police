@@ -46,6 +46,7 @@ waves.js            animated canvas background
 style.css           dashboard styling
 add-service.css     add-service modal styling
 services.json       the service catalog (data, not endpoints — see below)
+assets/logos/       locally served service marks and their attribution
 tests/              dependency-free static validation (node --test)
 tools/
   catalog-health.mjs  command-line catalog + endpoint health check
@@ -74,6 +75,16 @@ under `404police.board`. Adding a service costs exactly one request.
   guarantees a board can never contain a card that cannot resolve.
 
 Current counts: 139 entries, 122 Statuspage, 17 awaiting a custom adapter.
+
+### Service logos
+
+The default board's service marks are bundled under `assets/logos/`, so rendering
+does not depend on image CDNs or add any third-party browser requests. OpenAI's
+Blossom comes from the official OpenAI 2025 brand kit. The other marks come from
+Simple Icons 16.21.0 (CC0-1.0). All company names and marks remain trademarks of
+their respective owners; their use here identifies the status service only and
+does not imply affiliation or endorsement. See `assets/logos/README.md` for the
+asset-level source record.
 
 `custom:instatus` (Stability AI, Linear) was reclassified from `statuspage` by the
 test suite: Instatus serves `/summary.json` rather than `/api/v2/summary.json`, and

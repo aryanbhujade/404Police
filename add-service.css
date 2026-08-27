@@ -86,9 +86,26 @@
 
 .add-row-label {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: var(--space-sm);
     min-width: 0;
+}
+
+.add-row-logo-frame {
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    display: grid;
+    place-items: center;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+}
+
+.add-row-logo {
+    display: block;
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
 }
 
 .add-row-name {
