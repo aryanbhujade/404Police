@@ -148,7 +148,7 @@ the directory and open `/tools/cors-check.html`.
 
 ## Deployment
 
-`.github/workflows/pages.yml` runs on push to `main`, or on demand via
+`.github/workflows/pages.yml` runs on push to `github-pages-static`, or on demand via
 `workflow_dispatch`. It validates first (syntax, JSON, `node --test`), then uploads
 the repository root with `upload-pages-artifact` and publishes with `deploy-pages`.
 The health check runs in CI as `continue-on-error` — a third-party outage should
