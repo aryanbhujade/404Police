@@ -205,6 +205,22 @@
     .service-remove { opacity: 1; }
 }
 
+@media (max-width: 768px) {
+    .service-remove {
+        width: 24px;
+        height: 24px;
+        border-left-width: 2px;
+        border-bottom-width: 2px;
+        font-size: 16px;
+        opacity: 0.55;
+    }
+
+    .service-remove:focus-visible,
+    .service-remove:hover {
+        opacity: 1;
+    }
+}
+
 /* --- unknown status ----------------------------------------------------- */
 /* getStatusClass() returns 'unknown' for unrecognised payloads and failed
    fetches, where the original returned 'operational'. Without this rule the

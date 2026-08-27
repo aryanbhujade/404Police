@@ -432,7 +432,7 @@ class ServiceStatusDashboard {
                         Updated: ${this.formatTime(service.last_updated)}
                     </div>
                 </div>
-                <button class="view-details">View Details</button>
+                <button class="view-details">Details <span aria-hidden="true">→</span></button>
             </div>
             <button class="service-remove" title="Remove from board" aria-label="Remove ${safeServiceName}">&times;</button>
         `;
