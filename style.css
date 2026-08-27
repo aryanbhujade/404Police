@@ -182,8 +182,9 @@ body {
     transform: translateY(-1px);
 }
 
-.refresh-btn.loading {
+.refresh-btn.loading svg {
     animation: spin 1s linear infinite;
+    transform-origin: center;
 }
 
 .dark-mode-toggle .sun-icon {

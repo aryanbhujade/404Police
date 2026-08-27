@@ -104,3 +104,9 @@ test('app.js fetches the catalog by relative path', () => {
     assert.ok(match, 'CATALOG_URL not found');
     assert.ok(!match[1].startsWith('/'), 'CATALOG_URL must be relative for project Pages');
 });
+
+test('refresh loading animation spins the icon, not the button box', () => {
+    const css = read('style.css');
+    assert.match(css, /\.refresh-btn\.loading\s+svg\s*\{[^}]*animation:\s*spin/s);
+    assert.doesNotMatch(css, /\.refresh-btn\.loading\s*\{[^}]*animation:\s*spin/s);
+});
