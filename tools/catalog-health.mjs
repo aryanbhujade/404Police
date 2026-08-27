@@ -10,7 +10,7 @@
 //
 //   static   — JSON shape, duplicate keys, HTTPS-only URLs, defaults resolvable.
 //              No network. A failure here is a bug in services.json and is fatal.
-//   endpoint — HTTP status, CORS headers, Statuspage payload shape. Network.
+//   endpoint — redirects, HTTP status, CORS headers, Statuspage payload shape.
 //              A failure here may be the service having a bad day, so it exits 2
 //              rather than 1 and never blocks on `supported: false` entries.
 //
@@ -191,8 +191,9 @@ async function probe(service, opts) {
         url: service.url,
         supported: service.supported !== false,
         ok: false,
-        stage: null,      // where it stopped: network | http | cors | payload | shape
+        stage: null,      // where it stopped: network | redirect | http | cors | payload | shape
         http_status: null,
+        final_url: null,
         cors: null,
         detail: null,
         ms: null
@@ -216,6 +217,17 @@ async function probe(service, opts) {
             });
             result.ms = Date.now() - started;
             result.http_status = response.status;
+            result.final_url = response.url;
+
+            // A server-side fetch can silently follow an alias whose redirect
+            // response is not CORS-readable. Browsers reject that redirect before
+            // they ever reach the healthy final JSON response, so catalog entries
+            // must point at the canonical API URL directly.
+            if (response.redirected || response.url !== service.url) {
+                result.stage = 'redirect';
+                result.detail = `redirected to ${response.url}`;
+                return result;
+            }
 
             const cors = classifyCors(response.headers.get('access-control-allow-origin'));
             result.cors = cors.detail;

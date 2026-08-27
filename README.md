@@ -114,11 +114,14 @@ node tools/catalog-health.mjs --supported-only  # skip the known-unsupported buc
 node tools/catalog-health.mjs --limit 10 --concurrency 4 --timeout 8000
 ```
 
-Per endpoint it checks HTTP status, then CORS — sending a real `Origin` header,
+Per endpoint it rejects redirects first, then checks HTTP status and CORS — sending a real `Origin` header,
 because without one a CDN has no reason to emit `Access-Control-Allow-Origin` and the
 probe would pass on endpoints a browser cannot use — then, for Statuspage providers,
 that the payload actually contains the `status.indicator` and `status.description`
-fields `app.js` reads.
+fields `app.js` reads. Redirects are failures even when their destination works:
+the redirect response itself may omit CORS headers, which makes a browser stop before
+it reaches the final JSON payload. Catalog URLs therefore point directly at the
+canonical API endpoint.
 
 It is bounded by construction: concurrency clamped to 12, timeout clamped to 30s, one
 retry for network errors only. Walking 139 third-party status pages must not look
@@ -179,7 +182,7 @@ object-src  'none'
 Three choices worth stating plainly:
 
 - **`connect-src https:`, not an allow-list.** The board is user-extensible; any of
-  the 124 supported hosts may be fetched and more can be added without editing
+  the 122 supported hosts may be fetched and more can be added without editing
   `index.html`. This is the weakest directive in the policy. It still blocks
   cleartext `http:` and non-HTTP schemes, and `script-src 'self'` means an attacker
   who could exfiltrate through it would already need script execution.
